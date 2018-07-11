@@ -1,0 +1,17 @@
+1. Dựa vào public api từ trang https://coinmarketcap.com/api/ để xây dựng ứng dụng tra cứu quản lí coin:
+- hiển thị danh sách các coin trên CMC <Tên, Symbol, MarketCap, Price, Volume(24h)>
+    + có phân trang, auto loadmore
+    + tự động cập nhật 30s/lần
+    + có chức năng thay đổi kiểu sắp xếp <Id, rank, volume_24h, percent_change_24h>
+    + switch giá hiển thị theo <BTC, USD, ...>
+- chức năng tìm kiếm coin
+    + hiển thị danh sách gợi ý khi typing
+    + lưu lịch sử tìm kiếm
+- Trang chi tiết của coin: hiển thị nhiều nhất thông tin có thể của từng coin cụ thể (dựa theo api)
+- Bookmark coin: thêm coin vào bookmark, lưu danh sách bookmark offline, sửa, xoá, sắp xếp <ghim coin cụ thể lên top>
+
+Mở rộng:
+- Đăng nhập bằng openid (fb, google), tạo thông tin người dùng, đồng bộ danh sách bookmark, lịch sử tìm kiếm... qua firebase
+- sử dụng alarm manager để định kì push notification nhắc người dùng mở app
+- sử dụng firebase notification để thông báo cho người dùng mở app, tra cứu coin...
+- customize app: tuỳ chọn giao diện, màu..., tạo custom password, PIN... để đăng nhập
