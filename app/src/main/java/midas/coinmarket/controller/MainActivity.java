@@ -2,7 +2,6 @@ package midas.coinmarket.controller;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.paginate.Paginate;
@@ -101,7 +100,6 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
                     page = 0;
                     mAdapter.notifyDataSetChanged();
                 }
-                Log.e("Values", "Values : " + object.toString());
             }
 
             @Override

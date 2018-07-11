@@ -15,3 +15,9 @@ Mở rộng:
 - sử dụng alarm manager để định kì push notification nhắc người dùng mở app
 - sử dụng firebase notification để thông báo cho người dùng mở app, tra cứu coin...
 - customize app: tuỳ chọn giao diện, màu..., tạo custom password, PIN... để đăng nhập
+
+// Search :
+Using this link to get data search : https://api.coinmarketcap.com/v2/listings/
+// When click on item search :
+https://api.coinmarketcap.com/v2/ticker/1/?structure=array
+Description : 1 is "ID" from item search.

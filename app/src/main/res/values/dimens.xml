@@ -8,4 +8,6 @@
     <dimen name="value_60dp">60dp</dimen>
     <dimen name="value_30dp">30dp</dimen>
     <dimen name="value_20dp">20dp</dimen>
+    <dimen name="height_action_bar">45dp</dimen>
+    <dimen name="value_8dp">8dp</dimen>
 </resources>
