@@ -8,4 +8,46 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="PopupTheme" parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/primary_dark</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:dropDownItemStyle">@style/DropDownItemStyle</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+    </style>
+
+
+    <style name="DropDownItemStyle" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:background">@drawable/dropdown_item_background</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="@style/Widget.AppCompat.Light.SearchView">
+        <item name="suggestionRowLayout">@layout/search_dropdown_item_icons_2line</item>
+    </style>
+
+    <style name="SearchDropDownTheme" parent="@style/RtlOverlay.Widget.AppCompat.Search.DropDown">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+
+    <style name="DialogTheme" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">@color/red</item>
+        <!-- <item name="colorAccent">@color/red</item> -->
+        <item name="colorAccent">@color/red</item>
+        <item name="android:background">?attr/background</item>
+        <item name="alertDialogCenterButtons">true</item>
+    </style>
+
 </resources>

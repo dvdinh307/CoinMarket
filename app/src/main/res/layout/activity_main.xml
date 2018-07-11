@@ -4,30 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/rl_actionbar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_action_bar"
-        android:background="#D9000000"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imv_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_action_bar"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/value_8dp"
-            android:adjustViewBounds="true"
-            android:src="@mipmap/ic_logo" />
-
-    </RelativeLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:popupBackground="@color/red"
+        app:layout_constraintTop_toTopOf="parent"
+        app:logo="@mipmap/ic_logo_small"
+        app:popupTheme="@style/PopupTheme"
+        app:theme="@style/ToolbarTheme"
+        app:title="@string/lbl_title" />
 
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="0.75dp"
         android:background="@android:color/holo_red_dark"
-        app:layout_constraintTop_toBottomOf="@id/rl_actionbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcy_main"
