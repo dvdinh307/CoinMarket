@@ -36,7 +36,10 @@ public class AppConstants {
         QUOTES("quotes"),
         USD("USD"),
         LIMIT("limit"),
+        START("start"),
         SORT("sort"),
+        STRUCTURE("structure"),
+        CONVERT("convert"),
         MESSAGE("message");
 
         private String mName;

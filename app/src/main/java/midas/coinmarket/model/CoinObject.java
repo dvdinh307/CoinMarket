@@ -179,9 +179,11 @@ public class CoinObject implements Parcelable {
                     result.setUsd(QuoteObject.parserData(usd, AppConstants.KEY_PARAMS.USD.toString()));
                 }
                 // Other quote.
-                JSONObject other = quote.getJSONObject(name);
-                if (object.length() > 0) {
-                    result.setOther(QuoteObject.parserData(other, name));
+                if (name.length() > 0) {
+                    JSONObject other = quote.getJSONObject(name);
+                    if (object.length() > 0) {
+                        result.setOther(QuoteObject.parserData(other, name));
+                    }
                 }
             }
         } catch (JSONException e) {
