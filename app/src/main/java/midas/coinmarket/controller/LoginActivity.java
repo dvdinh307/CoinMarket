@@ -1,5 +1,6 @@
 package midas.coinmarket.controller;
 
+import android.content.Intent;
 import android.view.View;
 
 import butterknife.OnClick;
@@ -21,6 +22,8 @@ public class LoginActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_facebook:
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
                 break;
 
             case R.id.btn_google:

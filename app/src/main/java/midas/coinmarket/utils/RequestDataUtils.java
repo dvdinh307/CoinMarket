@@ -21,38 +21,23 @@ public class RequestDataUtils {
     /**
      * Using request data from server
      *
-     * @param activity
      * @param params
      * @param action
      */
-    public static void requestData(int method, final Activity activity, String url, final Map<String, String> params, final onResult action) {
+    public static void requestData(int method, String url, final Map<String, String> params, final onResult action) {
         StringRequest request = new StringRequest(method, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (response.length() > 0) {
                     try {
                         JSONObject objectResponse = new JSONObject(response);
-                        int status = objectResponse.optInt(AppConstants.KEY_PARAMS.STATUS.toString(), 1);
-                        String msg = objectResponse.optString(AppConstants.KEY_PARAMS.MESSAGE.toString());
-                        if (status == AppConstants.REQUEST_SUCCESS) {
-                            try {
-                                JSONObject objectData = objectResponse.getJSONObject(AppConstants.KEY_PARAMS.DATA.toString());
-                                if (action != null) {
-                                    action.onSuccess(objectData, msg);
-                                }
-                            } catch (JSONException e) {
-                                if (action != null)
-                                    action.onFail(status);
-                                e.printStackTrace();
-                            }
-                        } else {
-                            if (action != null)
-                                action.onFail(status);
-                        }
+                        if (action != null)
+                            action.onSuccess(objectResponse);
                     } catch (JSONException e) {
+                        if (action != null)
+                            action.onFail(AppConstants.STATUS_REQUEST.REQUEST_ERROR);
                         e.printStackTrace();
                     }
-
                 } else {
                     if (action != null)
                         action.onFail(AppConstants.STATUS_REQUEST.REQUEST_ERROR);
@@ -80,7 +65,7 @@ public class RequestDataUtils {
 
 
     public interface onResult {
-        void onSuccess(JSONObject object, String msg);
+        void onSuccess(JSONObject object);
 
         void onFail(int error);
     }
