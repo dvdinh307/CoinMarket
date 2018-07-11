@@ -16,4 +16,5 @@
     <color name="photo_tint">#88101010</color>
     <color name="purple">#4E00FF</color>
     <color name="white">#ffffff</color>
+    <color name="gray">#fafafa</color>
 </resources>

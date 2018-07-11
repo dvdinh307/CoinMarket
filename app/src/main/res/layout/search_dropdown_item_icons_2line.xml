@@ -63,6 +63,7 @@
         android:maxLines="1"
         android:paddingBottom="4dip"
         android:textAppearance="?attr/textAppearanceSearchResultSubtitle"
+        android:textColor="@color/solid_black"
         android:visibility="gone" />
     <!--Text Title-->
     <TextView
@@ -74,6 +75,6 @@
         android:layout_centerVertical="true"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceSearchResultTitle"
-        android:textColor="@color/red" />
+        android:textColor="@color/solid_black" />
 
 </RelativeLayout>
