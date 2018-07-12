@@ -1,5 +1,6 @@
 package midas.coinmarket.controller;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
@@ -83,7 +84,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CryptocurrencyObject cryobject = mListSuggest.get(position);
-
+                startActivity(new Intent(MainActivity.this, SpecificCurrencyActivity.class).putExtra(AppConstants.INTENT.DATA, String.valueOf(cryobject.getId())));
             }
         });
         // End

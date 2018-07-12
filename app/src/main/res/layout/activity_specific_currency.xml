@@ -14,7 +14,7 @@
             android:id="@+id/imv_back"
             android:layout_width="@dimen/value_45dp"
             android:layout_height="@dimen/value_45dp"
-            android:padding="@dimen/value_10dp"
+            android:padding="@dimen/value_12dp"
             android:src="@mipmap/ic_back" />
 
         <TextView

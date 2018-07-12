@@ -23,6 +23,18 @@ import midas.coinmarket.utils.RequestDataUtils;
 public class SpecificCurrencyActivity extends BaseActivity {
     @BindView(R.id.tv_name)
     TextView mTvName;
+    @BindView(R.id.tv_symbol)
+    TextView mTvSymbol;
+    @BindView(R.id.tv_website)
+    TextView mTvWebsite;
+    @BindView(R.id.tv_rank)
+    TextView mTvRank;
+    @BindView(R.id.tv_circulating_supply)
+    TextView mTvCirculating;
+    @BindView(R.id.tv_total_supply)
+    TextView mTvTotalSupply;
+    @BindView(R.id.tv_max_supply)
+    TextView mTvMaxSupply;
     private String mId;
 
     @Override
@@ -64,14 +76,16 @@ public class SpecificCurrencyActivity extends BaseActivity {
             }
         });
     }
-//    symbol: "BTC",
-//    website_slug: "bitcoin",
-//    rank: 1,
-//    circulating_supply: 17144887,
-//    total_supply: 17144887,
-//    max_supply: 21000000,
+
+    //    max_supply: 21000000,
     private void loadDataToView(CoinObject coin) {
         mTvName.setText(coin.getName());
+        mTvSymbol.setText(String.format("Symbol : %s", coin.getSymbol()));
+        mTvWebsite.setText(String.format("Website slug : %s", coin.getWebsiteSlug()));
+        mTvRank.setText(String.format("Rank : %s", coin.getRank()));
+        mTvCirculating.setText(String.format("Circulating supply : %s", coin.getSymbol()));
+        mTvTotalSupply.setText(String.format("Total supply : %s", coin.getSymbol()));
+        mTvMaxSupply.setText(String.format("Max supply : %s", coin.getSymbol()));
     }
 
     @OnClick({R.id.imv_back})
