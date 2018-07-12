@@ -14,6 +14,10 @@ public class AppConstants {
         public static int REQUEST_ERROR = 0;
     }
 
+    public static class INTENT {
+        public static String DATA = "DATA";
+    }
+
     public enum KEY_PARAMS {
         DEVICE_ID("device_id"),
         TOKEN("token"),
@@ -61,6 +65,7 @@ public class AppConstants {
         //active cryptocurrency
         LIST_CRYTOCURRENCY("listings"),
         LIST_TICKER("ticker/"),
+        CURRENCY_DETAIL("ticker/"),
         MESSAGE("message");
 
         private String mName;

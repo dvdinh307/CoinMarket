@@ -1,26 +1,20 @@
 package midas.coinmarket.controller;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.paginate.Paginate;
@@ -29,35 +23,36 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import butterknife.BindView;
 import midas.coinmarket.R;
 import midas.coinmarket.model.CoinObject;
+import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.utils.RequestDataUtils;
 import midas.coinmarket.view.CustomLoadingListItemCreator;
-import midas.coinmarket.view.SuggestionProvider;
+import midas.coinmarket.view.adapter.CryptocurrentcyAdapter;
 import midas.coinmarket.view.adapter.MainAdapter;
 
-public class MainActivity extends BaseActivity implements Paginate.Callbacks {
+public class MainActivity extends BaseActivity implements Paginate.Callbacks, SearchView.OnQueryTextListener {
     private final int NUMBER_ITEM = 10;
     @BindView(R.id.rcy_main)
     RecyclerView mRcyMain;
-    @BindView(R.id.toolbar)
-    Toolbar mToolBar;
+    @BindView(R.id.ll_search)
+    LinearLayout mLlSearch;
+    @BindView(R.id.list_suggest)
+    ListView mLvSuggest;
+    SearchView mSearchView;
 
     private int page = 1;
     private boolean isLoading;
     private MainAdapter mAdapter;
     private ArrayList<CoinObject> mListCoin = new ArrayList<>();
-    private MenuItem searchItem;
-    private SearchRecentSuggestions suggestions;
-    private SearchView searchView;
+    private ArrayList<CryptocurrencyObject> mListSuggest = new ArrayList<>();
+    private CryptocurrentcyAdapter mSearchAdapter;
 
     @Override
     public int getLayoutId() {
@@ -67,45 +62,30 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
     @Override
     public void initFunction() {
         // init actionbar.
-        setSupportActionBar(mToolBar);
-        suggestions = new SearchRecentSuggestions(this, SuggestionProvider.AUTHORITY,
-                SuggestionProvider.MODE);
-        for (int i = 0; i < 10; i++) {
-            suggestions.saveRecentQuery("A :" + i, "is a nice cheese");
-        }
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = new SearchView(Objects.requireNonNull(getSupportActionBar()).getThemedContext());
-        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(false);
-        searchView.setIconifiedByDefault(true);
-        searchView.setIconified(false);
-        searchView.setMaxWidth(1000);
-
-        SearchView.SearchAutoComplete searchAutoComplete = searchView
-                .findViewById(android.support.v7.appcompat.R.id.search_src_text);
-
-        // Collapse the search menu when the user hits the back key
-        searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mSearchView = findViewById(R.id.search);
+        mSearchView.setQueryHint("Input name coin");
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus)
-                    showSearch(false);
+            public void onClick(View v) {
+                mLlSearch.setVisibility(View.VISIBLE);
+            }
+        });
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mLlSearch.setVisibility(View.GONE);
+                return false;
             }
         });
 
-        try {
-            // This sets the cursor
-            // resource ID to 0 or @null
-            // which will make it visible
-            // on white background
-            Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
-            mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(searchAutoComplete, 0);
+        mLvSuggest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CryptocurrencyObject cryobject = mListSuggest.get(position);
 
-        } catch (Exception e) {
-        }
-
+            }
+        });
         // End
         mAdapter = new MainAdapter(mListCoin, false, false);
         mRcyMain.setLayoutManager(new LinearLayoutManager(this));
@@ -115,19 +95,9 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
                 .setLoadingListItemCreator(new CustomLoadingListItemCreator(MainActivity.this))
                 .addLoadingListItem(true)
                 .build();
+        getListSuggest();
     }
 
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        showSearch(false);
-        Bundle extras = intent.getExtras();
-        String userQuery = String.valueOf(extras.get(SearchManager.USER_QUERY));
-        String query = String.valueOf(extras.get(SearchManager.QUERY));
-        Toast.makeText(this, "query: " + query + " user_query: " + userQuery, Toast.LENGTH_SHORT)
-                .show();
-    }
 
     @Override
     public void onLoadMore() {
@@ -142,37 +112,6 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
     @Override
     public boolean hasLoadedAllItems() {
         return page == 0;
-    }
-
-
-    /**
-     * Called when the hardware search button is pressed
-     */
-    @Override
-    public boolean onSearchRequested() {
-        showSearch(true);
-        return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_about:
-                showAboutDialog();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        searchItem = menu.add(android.R.string.search_go);
-        searchItem.setIcon(R.mipmap.ic_search);
-        searchItem.setActionView(searchView);
-        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        menu.add(0, R.id.menu_about, 0, R.string.lbl_about);
-        return super.onCreateOptionsMenu(menu);
     }
 
     protected void showAboutDialog() {
@@ -197,6 +136,12 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
         messageText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    /**
+     * Get Data from server.
+     *
+     * @param currency
+     * @param sort
+     */
     public void getData(final String currency, String sort) {
         isLoading = true;
         final HashMap<String, String> params = new HashMap<>();
@@ -242,10 +187,47 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks {
         });
     }
 
-    protected void showSearch(boolean visible) {
-        if (visible)
-            searchItem.expandActionView();
-        else
-            searchItem.collapseActionView();
+    private void getListSuggest() {
+        final HashMap<String, String> params = new HashMap<>();
+        RequestDataUtils.requestData(Request.Method.GET, AppConstants.PATH_URL.LIST_CRYTOCURRENCY.toString(), params, new RequestDataUtils.onResult() {
+            @Override
+            public void onSuccess(JSONObject object) {
+                if (object.length() > 0) {
+                    // data.
+                    try {
+                        JSONArray datas = object.getJSONArray(AppConstants.KEY_PARAMS.DATA.toString());
+                        if (datas.length() > 0) {
+                            for (int i = 0; i < datas.length(); i++) {
+                                mListSuggest.add(CryptocurrencyObject.parserData(datas.getJSONObject(i)));
+                            }
+                        }
+                        // Search.
+                        mSearchAdapter = new CryptocurrentcyAdapter(MainActivity.this, mListSuggest);
+                        mLvSuggest.setAdapter(mSearchAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFail(int error) {
+
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.e("Values", "Values1 :" + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.e("Values", "Values2 :" + newText);
+        mSearchAdapter.filter(newText);
+        return false;
     }
 }
