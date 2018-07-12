@@ -2,6 +2,7 @@ package midas.coinmarket.controller;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,6 +17,7 @@ import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CoinObject;
+import midas.coinmarket.model.QuoteObject;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.utils.RequestDataUtils;
@@ -35,6 +37,39 @@ public class SpecificCurrencyActivity extends BaseActivity {
     TextView mTvTotalSupply;
     @BindView(R.id.tv_max_supply)
     TextView mTvMaxSupply;
+    @BindView(R.id.tbr_other)
+    TableRow mTbrOther;
+    // Usd
+    @BindView(R.id.tv_usd_cur)
+    TextView mTvUsdCur;
+    @BindView(R.id.tv_usd_price)
+    TextView mTvUsdPrice;
+    @BindView(R.id.tv_usd_vol)
+    TextView mTvUsdVol;
+    @BindView(R.id.tv_usd_mar)
+    TextView mTvUsdMar;
+    @BindView(R.id.tv_usd_per_1h)
+    TextView mTvPer1h;
+    @BindView(R.id.tv_usd_per_24h)
+    TextView mTvPer24h;
+    @BindView(R.id.tv_usd_per_7d)
+    TextView mTvUsdPer7d;
+    // Other
+    @BindView(R.id.tv_other_cur)
+    TextView mTvOtherCur;
+    @BindView(R.id.tv_other_price)
+    TextView mTvOtherPrice;
+    @BindView(R.id.tv_other_vol)
+    TextView mTvOtherVol;
+    @BindView(R.id.tv_other_mar)
+    TextView mTvOtherMar;
+    @BindView(R.id.tv_other_per_1h)
+    TextView mTvOtherPer1h;
+    @BindView(R.id.tv_other_per_24h)
+    TextView mTvOtherPer24h;
+    @BindView(R.id.tv_other_per_7d)
+    TextView mTvOtherPer7d;
+
     private String mId;
 
     @Override
@@ -86,6 +121,28 @@ public class SpecificCurrencyActivity extends BaseActivity {
         mTvCirculating.setText(String.format("Circulating supply : %s", coin.getSymbol()));
         mTvTotalSupply.setText(String.format("Total supply : %s", coin.getSymbol()));
         mTvMaxSupply.setText(String.format("Max supply : %s", coin.getSymbol()));
+        // USD.
+        QuoteObject usd = coin.getUsd();
+        mTvUsdCur.setText(usd.getName());
+        mTvUsdPrice.setText(String.valueOf(usd.getPrice()));
+        mTvUsdVol.setText(String.valueOf(usd.getVolume24h()));
+        mTvUsdMar.setText(String.valueOf(usd.getMarketCap()));
+        mTvPer1h.setText(String.valueOf(usd.getPercentChange_1h()));
+        mTvPer24h.setText(String.valueOf(usd.getPercentChange24h()));
+        mTvUsdPer7d.setText(String.valueOf(usd.getPercentChange7d()));
+        // Other.
+        QuoteObject other = coin.getOther();
+        if (other != null) {
+            mTvOtherCur.setText(other.getName());
+            mTvOtherPrice.setText(String.valueOf(other.getPrice()));
+            mTvOtherVol.setText(String.valueOf(other.getVolume24h()));
+            mTvOtherMar.setText(String.valueOf(other.getMarketCap()));
+            mTvOtherPer1h.setText(String.valueOf(other.getPercentChange_1h()));
+            mTvOtherPer24h.setText(String.valueOf(other.getPercentChange24h()));
+            mTvOtherPer7d.setText(String.valueOf(other.getPercentChange7d()));
+        } else {
+            mTbrOther.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.imv_back})
