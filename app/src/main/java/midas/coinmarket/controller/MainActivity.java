@@ -1,21 +1,18 @@
 package midas.coinmarket.controller;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.paginate.Paginate;
@@ -24,10 +21,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
@@ -62,9 +62,8 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
 
     @Override
     public void initFunction() {
-        // init actionbar.
         mSearchView = findViewById(R.id.search);
-        mSearchView.setQueryHint("Input name coin");
+        mSearchView.setQueryHint(getString(R.string.msg_hint_input_search));
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -115,26 +114,52 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
         return page == 0;
     }
 
-    protected void showAboutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActionBar().getThemedContext(),
-                R.style.DialogTheme);
-        builder.setPositiveButton(android.R.string.ok, null);
-        String title = getString(R.string.app_name) + " version: ";
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            title += " " + packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            //Handle exception
+
+    @OnClick({R.id.imv_menu})
+    public void OnClick(View view) {
+        switch (view.getId()) {
+            case R.id.imv_menu:
+                PopupMenu popup = new PopupMenu(this, view);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.popup_menu, popup.getMenu());
+                try {
+                    Field[] fields = popup.getClass().getDeclaredFields();
+                    for (Field field : fields) {
+                        if ("mPopup".equals(field.getName())) {
+                            field.setAccessible(true);
+                            Object menuPopupHelper = field.get(popup);
+                            Class<?> classPopupHelper = Class
+                                    .forName(menuPopupHelper.getClass().getName());
+                            Method setForceIcons = classPopupHelper
+                                    .getMethod("setForceShowIcon", boolean.class);
+                            setForceIcons.invoke(menuPopupHelper, true);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.item_sort:
+                                Toast.makeText(MainActivity.this , "Sort" , Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.item_switch:
+                                Toast.makeText(MainActivity.this , "Switch" , Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.item_book_mark:
+                                break;
+                            case R.id.item_history:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+                break;
         }
-        builder.setTitle(title);
-
-        builder.setIcon(R.mipmap.ic_launcher);
-        SpannableString aboutMessage = new SpannableString(Html.fromHtml(getString(R.string
-                .msg_about)));
-        builder.setMessage(aboutMessage);
-
-        TextView messageText = builder.show().findViewById(android.R.id.message);
-        messageText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     /**

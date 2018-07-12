@@ -8,4 +8,9 @@
     <string name="lbl_about">About</string>
     <string name="lbl_title"> Coin Market</string>
     <string name="author">midas.coinmarket.view.SuggestionProvider</string>
+    <string name="txt_sort">Sort</string>
+    <string name="txt_switch">Switch currency</string>
+    <string name="txt_book_mark">Book mark</string>
+    <string name="txt_history">History</string>
+    <string name="msg_hint_input_search">Input name coin</string>
 </resources>
