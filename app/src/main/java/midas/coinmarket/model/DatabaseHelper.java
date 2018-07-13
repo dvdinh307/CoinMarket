@@ -96,4 +96,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // return notes list
         return notes;
     }
+
+    /**
+     * Clear all history.
+     */
+    public void clearHistory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TBL_HISOTRY);
+    }
 }

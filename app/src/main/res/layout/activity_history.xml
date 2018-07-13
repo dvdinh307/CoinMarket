@@ -26,6 +26,13 @@
             android:textAllCaps="true"
             android:textColor="@android:color/black" />
 
+        <ImageView
+            android:id="@+id/imv_clear"
+            android:layout_width="@dimen/value_45dp"
+            android:layout_height="@dimen/value_45dp"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/value_8dp"
+            android:src="@mipmap/ic_clear" />
     </RelativeLayout>
 
     <ListView

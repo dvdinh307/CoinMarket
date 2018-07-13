@@ -1,10 +1,13 @@
 package midas.coinmarket.controller.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,11 +52,34 @@ public class HistoryActivity extends BaseActivity {
         mTvNoData.setVisibility(mList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
-    @OnClick({R.id.imv_back})
+    @OnClick({R.id.imv_back, R.id.imv_clear})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.imv_back:
                 finish();
+                break;
+            case R.id.imv_clear:
+                AlertDialog alertDialog = new AlertDialog.Builder(HistoryActivity.this).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage("Do you want to clear history ?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mHelper.clearHistory();
+                                Toast.makeText(HistoryActivity.this, "Clear success !", Toast.LENGTH_SHORT).show();
+                                mList.clear();
+                                mAdapter.notifyDataSetChanged();
+                                mTvNoData.setVisibility(mList.size() > 0 ? View.GONE : View.VISIBLE);
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
                 break;
         }
     }
