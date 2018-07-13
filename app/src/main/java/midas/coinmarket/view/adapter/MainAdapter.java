@@ -61,6 +61,10 @@ public class MainAdapter extends HFRecyclerView<CoinObject> {
         TextView mTvMax;
         @BindView(R.id.tv_quote)
         TextView mTvQuote;
+        @BindView(R.id.tv_price)
+        TextView mTvPrice;
+        @BindView(R.id.tv_value_24h)
+        TextView mTvValue24h;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -78,9 +82,13 @@ public class MainAdapter extends HFRecyclerView<CoinObject> {
             if (coin.getOther() != null) {
                 // Change.
                 mTvQuote.setText(String.format("Quote(%s)", coin.getOther().getName()));
+                mTvPrice.setText(String.format("Price : %s", coin.getOther().getPrice()));
+                mTvValue24h.setText(String.format("Price : %s", coin.getOther().getVolume24h()));
             } else {
                 // Default is USD
                 mTvQuote.setText(String.format("Quote(%s)", "USD"));
+                mTvPrice.setText(String.format("Price : %s", coin.getUsd().getPrice()));
+                mTvValue24h.setText(String.format("Price : %s", coin.getUsd().getVolume24h()));
             }
         }
     }
