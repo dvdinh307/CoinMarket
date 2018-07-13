@@ -28,10 +28,12 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
+import midas.coinmarket.controller.activity.HistoryActivity;
 import midas.coinmarket.controller.dialog.ChoiceSortTypeDialog;
 import midas.coinmarket.controller.dialog.CurrencyDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
+import midas.coinmarket.model.DatabaseHelper;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
@@ -59,6 +61,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
     private CryptocurrentcyAdapter mSearchAdapter;
     private String mSort = AppConstants.SORT.RANK;
     private String mCurrency = "";
+    private DatabaseHelper mHelper;
 
     @Override
     public int getLayoutId() {
@@ -67,6 +70,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
 
     @Override
     public void initFunction() {
+        mHelper = new DatabaseHelper(MainActivity.this);
         mSort = AppPreference.getInstance(MainActivity.this).getString(AppConstants.KEY_PREFERENCE.SORT, AppConstants.SORT.RANK);
         mSearchView = findViewById(R.id.search);
         mSearchView.setQueryHint(getString(R.string.msg_hint_input_search));
@@ -89,6 +93,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CryptocurrencyObject cryobject = mListSuggest.get(position);
+                mHelper.insertHistory(cryobject);
                 startActivity(new Intent(MainActivity.this, SpecificCurrencyActivity.class).putExtra(AppConstants.INTENT.DATA, String.valueOf(cryobject.getId())));
             }
         });
@@ -191,6 +196,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                             case R.id.item_book_mark:
                                 break;
                             case R.id.item_history:
+                                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
                                 break;
                         }
                         return false;

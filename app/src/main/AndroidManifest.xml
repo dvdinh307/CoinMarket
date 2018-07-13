@@ -36,7 +36,13 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".controller.SpecificCurrencyActivity" />
+        <activity
+            android:name=".controller.SpecificCurrencyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".controller.activity.HistoryActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="midas.coinmarket.view.SuggestionProvider"

@@ -29,6 +29,26 @@ public class AppConstants {
         public static String SORT = "APP_SORT";
     }
 
+    /**
+     * Define columns.
+     */
+    public enum COLUMNS {
+        ID("id"),
+        ID_COIN("id_coin"),
+        TITLE("title"),
+        TIME("time"),;
+        private String mName;
+
+        COLUMNS(String name) {
+            mName = name;
+        }
+
+        @Override
+        public String toString() {
+            return mName;
+        }
+    }
+
     public enum KEY_PARAMS {
         DEVICE_ID("device_id"),
         TOKEN("token"),

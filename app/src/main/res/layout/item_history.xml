@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imv_coin"
+        android:layout_width="@dimen/value_45dp"
+        android:layout_height="@dimen/value_45dp"
+        android:src="@mipmap/ic_coin" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/value_5dp"
+        android:text="@string/app_name"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintLeft_toRightOf="@id/imv_coin" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_20dp"
+        android:text="@string/app_name"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintLeft_toRightOf="@id/imv_coin"
+        app:layout_constraintTop_toBottomOf="@id/tv_name" />
+</android.support.constraint.ConstraintLayout>

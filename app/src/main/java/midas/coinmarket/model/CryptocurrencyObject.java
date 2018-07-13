@@ -12,6 +12,7 @@ public class CryptocurrencyObject implements Parcelable {
     String name;
     String symbol;
     String website_slug;
+    String time;
 
     public CryptocurrencyObject() {
     }
@@ -21,6 +22,7 @@ public class CryptocurrencyObject implements Parcelable {
         name = in.readString();
         symbol = in.readString();
         website_slug = in.readString();
+        time = in.readString();
     }
 
     public static final Creator<CryptocurrencyObject> CREATOR = new Creator<CryptocurrencyObject>() {
@@ -46,6 +48,7 @@ public class CryptocurrencyObject implements Parcelable {
         dest.writeString(name);
         dest.writeString(symbol);
         dest.writeString(website_slug);
+        dest.writeString(time);
     }
 
     public int getId() {
@@ -78,6 +81,14 @@ public class CryptocurrencyObject implements Parcelable {
 
     public void setWebsiteSlug(String website_slug) {
         this.website_slug = website_slug;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public static CryptocurrencyObject parserData(JSONObject object) {
