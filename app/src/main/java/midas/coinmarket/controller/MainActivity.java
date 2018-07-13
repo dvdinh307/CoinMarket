@@ -35,6 +35,7 @@ import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
+import midas.coinmarket.utils.RecyclerItemClickListener;
 import midas.coinmarket.utils.RequestDataUtils;
 import midas.coinmarket.view.CustomLoadingListItemCreator;
 import midas.coinmarket.view.adapter.CryptocurrentcyAdapter;
@@ -99,6 +100,20 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                 .setLoadingListItemCreator(new CustomLoadingListItemCreator(MainActivity.this))
                 .addLoadingListItem(true)
                 .build();
+
+        mRcyMain.addOnItemTouchListener(new RecyclerItemClickListener(MainActivity.this, mRcyMain, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                CoinObject coin = mListCoin.get(position);
+                if (coin != null)
+                    startActivity(new Intent(MainActivity.this, SpecificCurrencyActivity.class).putExtra(AppConstants.INTENT.DATA, String.valueOf(coin.getId())));
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
         getListSuggest();
     }
 

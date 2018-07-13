@@ -43,16 +43,12 @@ public class ChoiceSortTypeDialog extends Dialog {
         mSort = AppPreference.getInstance(getContext()).getString(AppConstants.KEY_PREFERENCE.SORT, AppConstants.SORT.RANK);
         if (mSort.equalsIgnoreCase(AppConstants.SORT.ID)) {
             mRbId.setChecked(true);
-            mChoice = AppConstants.SORT.ID;
         } else if (mSort.equalsIgnoreCase(AppConstants.SORT.RANK)) {
             mRbRank.setChecked(true);
-            mChoice = AppConstants.SORT.RANK;
         } else if (mSort.equalsIgnoreCase(AppConstants.SORT.VOLUME_24H)) {
             mRbVolume24h.setChecked(true);
-            mChoice = AppConstants.SORT.VOLUME_24H;
         } else if (mSort.equalsIgnoreCase(AppConstants.SORT.PERCENT_CHANGE_24H)) {
             mRbPercentChange24h.setChecked(true);
-            mChoice = AppConstants.SORT.PERCENT_CHANGE_24H;
         }
     }
 
@@ -60,6 +56,21 @@ public class ChoiceSortTypeDialog extends Dialog {
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.btn_submit:
+                int selectedId = mRgSort.getCheckedRadioButtonId();
+                switch (selectedId) {
+                    case R.id.rb_id:
+                        mChoice = AppConstants.SORT.ID;
+                        break;
+                    case R.id.rb_rank:
+                        mChoice = AppConstants.SORT.RANK;
+                        break;
+                    case R.id.rb_volume_24h:
+                        mChoice = AppConstants.SORT.VOLUME_24H;
+                        break;
+                    case R.id.rb_percent_change_24h:
+                        mChoice = AppConstants.SORT.PERCENT_CHANGE_24H;
+                        break;
+                }
                 if (mSort.equalsIgnoreCase(mChoice)) {
                     dismiss();
                 } else {
@@ -68,6 +79,7 @@ public class ChoiceSortTypeDialog extends Dialog {
                         mAction.onValueChoice(mChoice);
                     dismiss();
                 }
+
                 break;
         }
     }
