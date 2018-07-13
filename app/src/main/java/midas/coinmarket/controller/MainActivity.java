@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.paginate.Paginate;
@@ -30,6 +29,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.dialog.ChoiceSortTypeDialog;
+import midas.coinmarket.controller.dialog.CurrencyDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.utils.AppConstants;
@@ -58,6 +58,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
     private ArrayList<CryptocurrencyObject> mListSuggest = new ArrayList<>();
     private CryptocurrentcyAdapter mSearchAdapter;
     private String mSort = AppConstants.SORT.RANK;
+    private String mCurrency = "";
 
     @Override
     public int getLayoutId() {
@@ -120,7 +121,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
 
     @Override
     public void onLoadMore() {
-        getData("EUR", mSort);
+        getData(mCurrency, mSort);
     }
 
     @Override
@@ -169,14 +170,23 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                                     public void onValueChoice(String value) {
                                         page = 1;
                                         mSort = value;
-                                        getData("EUR", value);
+                                        getData(mCurrency, mSort);
                                     }
                                 });
                                 dialog.show();
 //                                có chức năng thay đổi kiểu sắp xếp <Id, rank, volume_24h, percent_change_24h>
                                 break;
                             case R.id.item_switch:
-                                Toast.makeText(MainActivity.this, "Switch", Toast.LENGTH_SHORT).show();
+                                CurrencyDialog currencyDialog = new CurrencyDialog(MainActivity.this);
+                                currencyDialog.setListener(new CurrencyDialog.onActionChoiceCurrency() {
+                                    @Override
+                                    public void onChoice(String currency) {
+                                        mCurrency = currency;
+                                        page = 1;
+                                        getData(mCurrency, mSort);
+                                    }
+                                });
+                                currencyDialog.show();
                                 break;
                             case R.id.item_book_mark:
                                 break;
