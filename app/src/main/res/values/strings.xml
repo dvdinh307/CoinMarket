@@ -15,4 +15,7 @@
     <string name="msg_hint_input_search">Input name coin</string>
     <string name="rb_id">ID</string>
     <string name="rb_rank">RANK</string>
+    <string name="btn_submit">Submit</string>
+    <string name="rb_volume_24h">VOLUME 24H</string>
+    <string name="rb_percent_change_24h">PERCENT CHANGE 24H</string>
 </resources>

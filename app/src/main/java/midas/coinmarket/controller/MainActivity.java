@@ -28,8 +28,8 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
 import midas.coinmarket.R;
+import midas.coinmarket.controller.dialog.ChoiceSortTypeDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.utils.AppConstants;
@@ -148,8 +148,17 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.item_sort:
+                                ChoiceSortTypeDialog dialog = new ChoiceSortTypeDialog(MainActivity.this);
+                                dialog.setListener(new ChoiceSortTypeDialog.onActionChoice() {
+                                    @Override
+                                    public void onValueChoice(String value) {
+                                        page = 1;
+                                        mSort = value;
+                                        getData("EUR", value);
+                                    }
+                                });
+                                dialog.show();
 //                                có chức năng thay đổi kiểu sắp xếp <Id, rank, volume_24h, percent_change_24h>
-                                Toast.makeText(MainActivity.this, "Sort", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.item_switch:
                                 Toast.makeText(MainActivity.this, "Switch", Toast.LENGTH_SHORT).show();
