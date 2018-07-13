@@ -12,4 +12,5 @@
     <dimen name="value_8dp">8dp</dimen>
     <dimen name="value_45dp">45dp</dimen>
     <dimen name="value_12dp">12dp</dimen>
+    <dimen name="value_350dp">350dp</dimen>
 </resources>

@@ -28,10 +28,12 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
 import midas.coinmarket.R;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.utils.AppConstants;
+import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.utils.RequestDataUtils;
 import midas.coinmarket.view.CustomLoadingListItemCreator;
@@ -54,6 +56,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
     private ArrayList<CoinObject> mListCoin = new ArrayList<>();
     private ArrayList<CryptocurrencyObject> mListSuggest = new ArrayList<>();
     private CryptocurrentcyAdapter mSearchAdapter;
+    private String mSort = AppConstants.SORT.RANK;
 
     @Override
     public int getLayoutId() {
@@ -62,6 +65,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
 
     @Override
     public void initFunction() {
+        mSort = AppPreference.getInstance(MainActivity.this).getString(AppConstants.KEY_PREFERENCE.SORT, AppConstants.SORT.RANK);
         mSearchView = findViewById(R.id.search);
         mSearchView.setQueryHint(getString(R.string.msg_hint_input_search));
         mSearchView.setOnQueryTextListener(this);
@@ -101,7 +105,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
 
     @Override
     public void onLoadMore() {
-        getData("EUR", "id");
+        getData("EUR", mSort);
     }
 
     @Override
@@ -144,10 +148,11 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.item_sort:
-                                Toast.makeText(MainActivity.this , "Sort" , Toast.LENGTH_SHORT).show();
+//                                có chức năng thay đổi kiểu sắp xếp <Id, rank, volume_24h, percent_change_24h>
+                                Toast.makeText(MainActivity.this, "Sort", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.item_switch:
-                                Toast.makeText(MainActivity.this , "Switch" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Switch", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.item_book_mark:
                                 break;

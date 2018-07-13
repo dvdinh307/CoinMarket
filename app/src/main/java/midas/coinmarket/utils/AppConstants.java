@@ -18,6 +18,17 @@ public class AppConstants {
         public static String DATA = "DATA";
     }
 
+    public static class SORT {
+        public static String ID = "id";
+        public static String RANK = "rank";
+        public static String VOLUME_24H = "volume_24h";
+        public static String PERCENT_CHANGE_24H = "percent_change_24h ";
+    }
+
+    public static class KEY_PREFERENCE {
+        public static String SORT = "APP_SORT";
+    }
+
     public enum KEY_PARAMS {
         DEVICE_ID("device_id"),
         TOKEN("token"),
