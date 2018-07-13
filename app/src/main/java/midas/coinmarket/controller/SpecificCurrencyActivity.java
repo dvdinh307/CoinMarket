@@ -145,11 +145,13 @@ public class SpecificCurrencyActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.imv_back})
+    @OnClick({R.id.imv_back, R.id.imv_favorite})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.imv_back:
                 finish();
+                break;
+            case R.id.imv_favorite:
                 break;
         }
     }
