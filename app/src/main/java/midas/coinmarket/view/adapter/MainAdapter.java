@@ -59,6 +59,8 @@ public class MainAdapter extends HFRecyclerView<CoinObject> {
         TextView mTvTotal;
         @BindView(R.id.tv_max_supply)
         TextView mTvMax;
+        @BindView(R.id.tv_quote)
+        TextView mTvQuote;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -66,13 +68,20 @@ public class MainAdapter extends HFRecyclerView<CoinObject> {
         }
 
         public void bindData(CoinObject coin, int position) {
-            mTvName.setText(coin.getName());
-            mTvSymbol.setText(coin.getSymbol());
-            mTvWebsite.setText(coin.getWebsiteSlug());
-            mTvRank.setText(String.valueOf(coin.getRank()));
-            mTvCirculating.setText(String.valueOf(coin.getCirculatingSupply()));
-            mTvTotal.setText(String.valueOf(coin.getTotalSupply()));
-            mTvMax.setText(String.valueOf(coin.getMaxSupply()));
+            mTvName.setText(String.format("Name : %s", coin.getName()));
+            mTvSymbol.setText(String.format("Symbol :%s", coin.getSymbol()));
+            mTvWebsite.setText(String.format("Website slug : %s", coin.getWebsiteSlug()));
+            mTvRank.setText(String.format("Rank : %s", String.valueOf(coin.getRank())));
+            mTvCirculating.setText(String.format("Circulating Supply :%s", String.valueOf(coin.getCirculatingSupply())));
+            mTvTotal.setText(String.format("Total Supply :%s", String.valueOf(coin.getTotalSupply())));
+            mTvMax.setText(String.format("Max Supply :%s", String.valueOf(coin.getMaxSupply())));
+            if (coin.getOther() != null) {
+                // Change.
+                mTvQuote.setText(String.format("Quote(%s)", coin.getOther().getName()));
+            } else {
+                // Default is USD
+                mTvQuote.setText(String.format("Quote(%s)", "USD"));
+            }
         }
     }
 }
