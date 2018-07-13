@@ -62,7 +62,7 @@ public class BookmarkActivity extends BaseActivity {
                 if (mHelper.pinToTop(String.valueOf(coin.getId()))) {
                     CoinObject coinTop = mListCoin.get(position);
                     mListCoin.remove(position);
-                    mListCoin.add(coinTop);
+                    mListCoin.add(0, coinTop);
                     mAdapter.notifyDataSetChanged();
                     Toast.makeText(BookmarkActivity.this, "Pin success !", Toast.LENGTH_SHORT).show();
                 } else {

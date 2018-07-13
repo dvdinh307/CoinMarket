@@ -21,3 +21,7 @@ Using this link to get data search : https://api.coinmarketcap.com/v2/listings/
 // When click on item search :
 https://api.coinmarketcap.com/v2/ticker/1/?structure=array
 Description : 1 is "ID" from item search.
+
+// chưa làm được.
++ Tự động cập nhật 30s/lần.
++ Sửa bookmark coin : Chưa rõ yêu cầu sửa.
