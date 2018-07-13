@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 
@@ -17,8 +18,10 @@ import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CoinObject;
+import midas.coinmarket.model.DatabaseHelper;
 import midas.coinmarket.model.QuoteObject;
 import midas.coinmarket.utils.AppConstants;
+import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.utils.RequestDataUtils;
 
@@ -70,7 +73,11 @@ public class SpecificCurrencyActivity extends BaseActivity {
     @BindView(R.id.tv_other_per_7d)
     TextView mTvOtherPer7d;
 
+    private String mCurrency = "";
     private String mId;
+    private DatabaseHelper mHelper;
+    private String mContentCoin = "";
+    private CoinObject mCoinObject;
 
     @Override
     public int getLayoutId() {
@@ -79,11 +86,13 @@ public class SpecificCurrencyActivity extends BaseActivity {
 
     @Override
     public void initFunction() {
+        mHelper = new DatabaseHelper(SpecificCurrencyActivity.this);
+        mCurrency = AppPreference.getInstance(SpecificCurrencyActivity.this).getString(AppConstants.KEY_PREFERENCE.CURRENCY, AppConstants.CURRENCY_DEFAULT);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
             mId = bundle.getString(AppConstants.INTENT.DATA, "");
         if (mId.length() > 0)
-            getData(mId, "EUR");
+            getData(mId, mCurrency);
     }
 
     private void getData(String id, final String otherCurrency) {
@@ -96,8 +105,9 @@ public class SpecificCurrencyActivity extends BaseActivity {
                 try {
                     JSONObject data = object.getJSONObject(AppConstants.KEY_PARAMS.DATA.toString());
                     if (data.length() > 0) {
-                        CoinObject coinObject = CoinObject.parserData(data, otherCurrency);
-                        loadDataToView(coinObject);
+                        mContentCoin = data.toString();
+                        mCoinObject = CoinObject.parserData(data, otherCurrency);
+                        loadDataToView(mCoinObject);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -152,6 +162,10 @@ public class SpecificCurrencyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.imv_favorite:
+                // save to bookmark.
+                if (mContentCoin.length() > 0)
+                    mHelper.insertBookMark(mCoinObject, mContentCoin);
+                Toast.makeText(SpecificCurrencyActivity.this, "Save success", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

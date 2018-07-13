@@ -28,6 +28,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
+import midas.coinmarket.controller.activity.BookmarkActivity;
 import midas.coinmarket.controller.activity.HistoryActivity;
 import midas.coinmarket.controller.dialog.ChoiceSortTypeDialog;
 import midas.coinmarket.controller.dialog.CurrencyDialog;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
     public void initFunction() {
         mHelper = new DatabaseHelper(MainActivity.this);
         mSort = AppPreference.getInstance(MainActivity.this).getString(AppConstants.KEY_PREFERENCE.SORT, AppConstants.SORT.RANK);
+        mCurrency = AppPreference.getInstance(MainActivity.this).getString(AppConstants.KEY_PREFERENCE.CURRENCY, AppConstants.CURRENCY_DEFAULT);
         mSearchView = findViewById(R.id.search);
         mSearchView.setQueryHint(getString(R.string.msg_hint_input_search));
         mSearchView.setOnQueryTextListener(this);
@@ -179,13 +181,13 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                                     }
                                 });
                                 dialog.show();
-//                                có chức năng thay đổi kiểu sắp xếp <Id, rank, volume_24h, percent_change_24h>
                                 break;
                             case R.id.item_switch:
                                 CurrencyDialog currencyDialog = new CurrencyDialog(MainActivity.this);
                                 currencyDialog.setListener(new CurrencyDialog.onActionChoiceCurrency() {
                                     @Override
                                     public void onChoice(String currency) {
+                                        AppPreference.getInstance(MainActivity.this).putString(AppConstants.KEY_PREFERENCE.CURRENCY, currency);
                                         mCurrency = currency;
                                         page = 1;
                                         getData(mCurrency, mSort);
@@ -194,6 +196,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                                 currencyDialog.show();
                                 break;
                             case R.id.item_book_mark:
+                                startActivity(new Intent(MainActivity.this, BookmarkActivity.class));
                                 break;
                             case R.id.item_history:
                                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));

@@ -43,6 +43,9 @@
         <activity
             android:name=".controller.activity.HistoryActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".controller.activity.BookmarkActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="midas.coinmarket.view.SuggestionProvider"

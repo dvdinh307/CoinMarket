@@ -20,6 +20,7 @@
     <string name="rb_percent_change_24h">PERCENT CHANGE 24H</string>
     <string name="title_history">History</string>
     <string name="txt_no_data">History empty</string>
+    <string name="title_book_mark">Bookmark history</string>
     <string-array name="value_currency">
         <item>AUD</item>
         <item>BRL</item>

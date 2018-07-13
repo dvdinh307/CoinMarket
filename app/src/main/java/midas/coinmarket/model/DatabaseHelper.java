@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,6 +29,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             AppConstants.COLUMNS.TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
             ")";
 
+    private final String CREATE_TABLE_BOOKMARK = "CREATE TABLE " + TBL_BOOKMARK + "(" +
+            AppConstants.COLUMNS.ID.toString() + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            AppConstants.COLUMNS.ID_BOOKMARK.toString() + " TEXT," +
+            AppConstants.COLUMNS.CONTENT_BOOK_MARK.toString() + " TEXT," +
+            AppConstants.COLUMNS.TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
+            ")";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -38,30 +48,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_HISTORY);
+        db.execSQL(CREATE_TABLE_BOOKMARK);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TBL_HISOTRY);
-        // Create tables again
+        db.execSQL("DROP TABLE IF EXISTS " + TBL_BOOKMARK);
         onCreate(db);
     }
 
-    public long insertHistory(CryptocurrencyObject object) {
-        // get writable database as we want to write data
+    public void insertHistory(CryptocurrencyObject object) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        // `id` and `timestamp` will be inserted automatically.
-        // no need to add them
         values.put(AppConstants.COLUMNS.ID_COIN.toString(), String.valueOf(object.getId()));
         values.put(AppConstants.COLUMNS.TITLE.toString(), object.getName());
         values.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
-        // insert row
-        long id = db.insert(TBL_HISOTRY, null, values);
-        // close db connection
+        db.insert(TBL_HISOTRY, null, values);
         db.close();
-        // return newly inserted row id
-        return id;
     }
 
     /**
@@ -71,7 +75,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public ArrayList<CryptocurrencyObject> getAllHistory() {
         ArrayList<CryptocurrencyObject> notes = new ArrayList<>();
-
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TBL_HISOTRY + " ORDER BY " +
                 AppConstants.COLUMNS.TIME.toString() + " DESC";
@@ -89,11 +92,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 notes.add(cryobject);
             } while (cursor.moveToNext());
         }
-
-        // close db connection
         db.close();
         cursor.close();
-        // return notes list
         return notes;
     }
 
@@ -104,4 +104,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TBL_HISOTRY);
     }
+
+    // CREATE FUNCTION FOR BOOKMARK.
+    public void insertBookMark(CoinObject coin, String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Check exist.
+        String sql = "SELECT * FROM " + TBL_BOOKMARK + " WHERE " + AppConstants.COLUMNS.ID_BOOKMARK.toString() + "=" + String.valueOf(coin.getId());
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.getCount() == 0) {
+            ContentValues values = new ContentValues();
+            values.put(AppConstants.COLUMNS.ID_BOOKMARK.toString(), coin.getId());
+            values.put(AppConstants.COLUMNS.CONTENT_BOOK_MARK.toString(), title);
+            values.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
+            db.insert(TBL_BOOKMARK, null, values);
+        }
+        cursor.close();
+        db.close();
+    }
+
+    /**
+     * Get All list book mark.
+     *
+     * @return
+     */
+    public ArrayList<CoinObject> getAllBookmark() {
+        ArrayList<CoinObject> coins = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TBL_BOOKMARK + " ORDER BY " +
+                AppConstants.COLUMNS.TIME.toString() + " DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                String data = cursor.getString(cursor.getColumnIndex(AppConstants.COLUMNS.CONTENT_BOOK_MARK.toString()));
+                try {
+                    // TODO : Now only save USD values.
+                    JSONObject object = new JSONObject(data);
+                    coins.add(CoinObject.parserData(object, ""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+        return coins;
+    }
+
+
 }

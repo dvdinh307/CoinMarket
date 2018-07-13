@@ -9,6 +9,7 @@ public class AppConstants {
     public static int REQUEST_SUCCESS = 200;
 
     public static String URL_BASE = "https://api.coinmarketcap.com/v2/";
+    public static String CURRENCY_DEFAULT = "USD";
 
     public static class STATUS_REQUEST {
         public static int REQUEST_ERROR = 0;
@@ -27,6 +28,7 @@ public class AppConstants {
 
     public static class KEY_PREFERENCE {
         public static String SORT = "APP_SORT";
+        public static String CURRENCY = "APP_CURRENCY";
     }
 
     /**
@@ -35,7 +37,9 @@ public class AppConstants {
     public enum COLUMNS {
         ID("id"),
         ID_COIN("id_coin"),
+        ID_BOOKMARK("id_book_mark"),
         TITLE("title"),
+        CONTENT_BOOK_MARK("content_book_mark"),
         TIME("time"),;
         private String mName;
 
