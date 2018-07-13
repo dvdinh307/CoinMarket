@@ -153,5 +153,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return coins;
     }
 
+    /**
+     * Remove item
+     *
+     * @param id
+     * @return
+     */
+    public boolean removeItemBookmark(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TBL_BOOKMARK, AppConstants.COLUMNS.ID_BOOKMARK + "=" + id, null) > 0;
+    }
+
+    /**
+     * Pin item to top.
+     *
+     * @param id
+     */
+    public boolean pinToTop(String id) {
+        ContentValues content = new ContentValues();
+        content.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.update(TBL_BOOKMARK, content, AppConstants.COLUMNS.ID_BOOKMARK + " = " + id, null) > 0;
+    }
+
 
 }
