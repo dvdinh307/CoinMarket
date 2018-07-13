@@ -35,6 +35,7 @@ import midas.coinmarket.controller.dialog.CurrencyDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.model.DatabaseHelper;
+import midas.coinmarket.utils.AlarmManagerUtils;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
@@ -123,6 +124,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
             }
         }));
         getListSuggest();
+        createAlarm();
     }
 
 
@@ -304,4 +306,17 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
         mSearchAdapter.filter(newText);
         return false;
     }
+
+    /**
+     * Create alarm notification.
+     * Create only one time.
+     */
+    private void createAlarm() {
+        String isFirstBoot = AppPreference.getInstance(MainActivity.this).getString(AppConstants.KEY_PREFERENCE.ALARM, "");
+        if (isFirstBoot.length() == 0) {
+            AppPreference.getInstance(MainActivity.this).putString(AppConstants.KEY_PREFERENCE.ALARM, "first_boot");
+            AlarmManagerUtils.instanceAlarm(MainActivity.this).setAlarmDaily();
+        }
+    }
+
 }

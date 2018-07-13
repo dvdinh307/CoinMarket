@@ -29,6 +29,7 @@ public class AppConstants {
     public static class KEY_PREFERENCE {
         public static String SORT = "APP_SORT";
         public static String CURRENCY = "APP_CURRENCY";
+        public static String ALARM = "APP_ALARM";
     }
 
     /**
