@@ -25,3 +25,4 @@ Description : 1 is "ID" from item search.
 // chưa làm được.
 + Tự động cập nhật 30s/lần.
 + Sửa bookmark coin : Chưa rõ yêu cầu sửa.
++ Alarm create at 8:00 and repeat on next day.

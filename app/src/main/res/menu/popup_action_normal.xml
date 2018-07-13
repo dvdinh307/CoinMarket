@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/item_edit"
-        android:icon="@mipmap/ic_sort"
+        android:icon="@mipmap/ic_edit"
         android:title="@string/txt_edit" />
     <item
         android:id="@+id/item_delete"
-        android:icon="@mipmap/ic_switch_currency"
+        android:icon="@mipmap/ic_clear"
         android:title="@string/txt_delete" />
 
 </menu>

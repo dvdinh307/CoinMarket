@@ -30,12 +30,11 @@ public class AlarmManagerUtils {
         Intent intent = new Intent(mContext, AlarmReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 8);
         calendar.set(Calendar.MINUTE, 0);
         // 8Am && 8PM. Call alarm.
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_HALF_DAY, alarmIntent);
+                AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
 
