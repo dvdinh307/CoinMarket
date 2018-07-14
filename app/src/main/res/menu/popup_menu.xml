@@ -16,4 +16,8 @@
         android:id="@+id/item_history"
         android:icon="@mipmap/ic_history"
         android:title="@string/txt_history" />
+    <item
+        android:id="@+id/item_logout"
+        android:icon="@mipmap/ic_logout"
+        android:title="@string/txt_logout" />
 </menu>

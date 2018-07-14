@@ -1,6 +1,8 @@
 package midas.coinmarket.controller;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,7 @@ import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.model.DatabaseHelper;
+import midas.coinmarket.utils.AccountUtils;
 import midas.coinmarket.utils.AlarmManagerUtils;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.AppPreference;
@@ -247,6 +250,26 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                                 break;
                             case R.id.item_history:
                                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                                break;
+                            case R.id.item_logout:
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                alertDialog.setTitle("Alert");
+                                alertDialog.setMessage("Do you want to logout ?");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                AccountUtils.clearAllAccountOfThisApplication(MainActivity.this);
+                                                startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                alertDialog.show();
                                 break;
                         }
                         return false;
