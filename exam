@@ -11,7 +11,7 @@
 - Bookmark coin: thêm coin vào bookmark, lưu danh sách bookmark offline, sửa, xoá, sắp xếp <ghim coin cụ thể lên top>
 
 Mở rộng:
-- Đăng nhập bằng openid (fb, google), tạo thông tin người dùng,
+- (DONE )Đăng nhập bằng openid (fb, google), tạo thông tin người dùng,
 - (DONE) sử dụng alarm manager để định kì push notification nhắc người dùng mở app
 - (DONE) sử dụng firebase notification để thông báo cho người dùng mở app, tra cứu coin...
 - customize app: tuỳ chọn giao diện, màu..., tạo custom password, PIN... để đăng nhập
@@ -22,7 +22,8 @@ Using this link to get data search : https://api.coinmarketcap.com/v2/listings/
 https://api.coinmarketcap.com/v2/ticker/1/?structure=array
 Description : 1 is "ID" from item search.
 
-// chưa làm được.
+// Chưa làm được.
 + đồng bộ danh sách bookmark, lịch sử tìm kiếm... qua firebase
 + Sửa bookmark coin : Chưa rõ yêu cầu sửa những gì.
+// Note
 + Alarm create at 8:00 and repeat on next day.
