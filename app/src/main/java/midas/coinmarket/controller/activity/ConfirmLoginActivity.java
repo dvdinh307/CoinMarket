@@ -44,7 +44,7 @@ public class ConfirmLoginActivity extends BaseActivity {
             mEdtEmail.setText(user.getEmail());
     }
 
-    @OnClick({R.id.btn_submit})
+    @OnClick({R.id.btn_submit, R.id.imv_back})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.btn_submit:
@@ -55,6 +55,9 @@ public class ConfirmLoginActivity extends BaseActivity {
                     startActivity(new Intent(ConfirmLoginActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     finish();
                 }
+                break;
+            case R.id.imv_back:
+                finish();
                 break;
         }
     }
