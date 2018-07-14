@@ -1,12 +1,6 @@
 package midas.coinmarket.utils;
 
-/**
- * Created by Hss on 8/19/2015.
- */
 public class AppConstants {
-
-    public static boolean isTestMode = true;
-    public static int REQUEST_SUCCESS = 200;
 
     public static String URL_BASE = "https://api.coinmarketcap.com/v2/";
     public static String CURRENCY_DEFAULT = "USD";
@@ -17,6 +11,7 @@ public class AppConstants {
 
     public static class INTENT {
         public static String DATA = "DATA";
+        public static String USER = "USER";
     }
 
     public static class SORT {

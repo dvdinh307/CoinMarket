@@ -2,11 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="midas.coinmarket">
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
     <application
         android:name=".AppApplication"
@@ -47,12 +50,9 @@
         <activity
             android:name=".controller.activity.BookmarkActivity"
             android:screenOrientation="portrait" />
-
-        <provider
-            android:name="midas.coinmarket.view.SuggestionProvider"
-            android:authorities="@string/author"
-            android:exported="false" />
-
+        <activity
+            android:name=".controller.activity.ConfirmLoginActivity"
+            android:screenOrientation="portrait" />
         <!--Service-->
         <receiver
             android:name=".controller.service.AlarmReceiver"
@@ -82,8 +82,18 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <!--End GCM-->
+        <!--Authentication-->
+        <service
+            android:name=".controller.service.AuthenticationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
     </application>
 
 </manifest>
