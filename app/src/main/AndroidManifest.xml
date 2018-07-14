@@ -65,6 +65,25 @@
             </intent-filter>
         </receiver>
         <!--End Service-->
+        <!--GCM-->
+        <service
+            android:name=".controller.service.FCMReceiveMessage"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".controller.service.ServiceFCMInstanceID"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--End GCM-->
     </application>
 
 </manifest>

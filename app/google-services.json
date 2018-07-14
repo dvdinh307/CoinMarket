@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "943813681886-3panmnapl9751730iu9l01jepsqb40l2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "midas.coinmarket",
+            "certificate_hash": "828367c6cf0a0dae9a74eccec3f3fd3a2b4b2a7f"
+          }
+        },
+        {
           "client_id": "943813681886-pr5mprhb76siad1oe89ad3lhu8feehht.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.paginate.Paginate;
@@ -24,6 +25,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,6 +35,7 @@ import midas.coinmarket.controller.activity.BookmarkActivity;
 import midas.coinmarket.controller.activity.HistoryActivity;
 import midas.coinmarket.controller.dialog.ChoiceSortTypeDialog;
 import midas.coinmarket.controller.dialog.CurrencyDialog;
+import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.model.DatabaseHelper;
@@ -47,6 +51,7 @@ import midas.coinmarket.view.adapter.MainAdapter;
 
 public class MainActivity extends BaseActivity implements Paginate.Callbacks, SearchView.OnQueryTextListener {
     private final int NUMBER_ITEM = 10;
+    private final long TIME_AUTO_UPDATE = 30000;
     @BindView(R.id.rcy_main)
     RecyclerView mRcyMain;
     @BindView(R.id.ll_search)
@@ -64,6 +69,7 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
     private String mSort = AppConstants.SORT.RANK;
     private String mCurrency = "";
     private DatabaseHelper mHelper;
+    private Timer mTimer = null;
 
     @Override
     public int getLayoutId() {
@@ -127,6 +133,45 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
         createAlarm();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        createTimerAutoUpdate();
+    }
+
+    /**
+     * Create loop auto update.
+     * Update after 30s.
+     */
+    private void createTimerAutoUpdate() {
+        if (mTimer == null) {
+            mTimer = new Timer();
+            mTimer.scheduleAtFixedRate(new TimerTask() {
+                                           @Override
+                                           public void run() {
+                                               page = 1;
+                                               runOnUiThread(new Runnable() {
+                                                   @Override
+                                                   public void run() {
+                                                       Toast.makeText(MainActivity.this, "Auto update.", Toast.LENGTH_SHORT).show();
+                                                   }
+                                               });
+                                               updateData(mCurrency, mSort);
+                                           }
+                                       }, TIME_AUTO_UPDATE,
+                    TIME_AUTO_UPDATE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+
+    }
 
     @Override
     public void onLoadMore() {
@@ -259,6 +304,66 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
                 isLoading = false;
                 page = 0;
                 mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void updateData(final String currency, String sort) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LoadingDialog.getDialog(MainActivity.this).show();
+            }
+        });
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(AppConstants.KEY_PARAMS.LIMIT.toString(), String.valueOf(NUMBER_ITEM));
+        params.put(AppConstants.KEY_PARAMS.SORT.toString(), sort);
+        params.put(AppConstants.KEY_PARAMS.START.toString(), String.valueOf(page * NUMBER_ITEM));
+        params.put(AppConstants.KEY_PARAMS.STRUCTURE.toString(), "array");
+        if (currency.length() > 0)
+            params.put(AppConstants.KEY_PARAMS.CONVERT.toString(), currency);
+        RequestDataUtils.requestData(Request.Method.GET, AppConstants.PATH_URL.LIST_TICKER.toString(), params, new RequestDataUtils.onResult() {
+            @Override
+            public void onSuccess(JSONObject object) {
+                if (page == 1)
+                    mListCoin.clear();
+                if (object.length() > 0) {
+                    // data.
+                    try {
+                        JSONArray datas = object.getJSONArray(AppConstants.KEY_PARAMS.DATA.toString());
+                        if (datas.length() > 0) {
+                            for (int i = 0; i < datas.length(); i++) {
+                                mListCoin.add(CoinObject.parserData(datas.getJSONObject(i), currency));
+                            }
+                        }
+                        page++;
+                        mAdapter.notifyDataSetChanged();
+                        mRcyMain.smoothScrollToPosition(0);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    page = 0;
+                    mAdapter.notifyDataSetChanged();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadingDialog.getDialog(MainActivity.this).dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onFail(int error) {
+                page = 0;
+                mAdapter.notifyDataSetChanged();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadingDialog.getDialog(MainActivity.this).dismiss();
+                    }
+                });
             }
         });
     }

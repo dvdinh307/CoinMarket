@@ -12,8 +12,8 @@
 
 Mở rộng:
 - Đăng nhập bằng openid (fb, google), tạo thông tin người dùng, đồng bộ danh sách bookmark, lịch sử tìm kiếm... qua firebase
-- sử dụng alarm manager để định kì push notification nhắc người dùng mở app
-- sử dụng firebase notification để thông báo cho người dùng mở app, tra cứu coin...
+- (DONE) sử dụng alarm manager để định kì push notification nhắc người dùng mở app
+- (DONE) sử dụng firebase notification để thông báo cho người dùng mở app, tra cứu coin...
 - customize app: tuỳ chọn giao diện, màu..., tạo custom password, PIN... để đăng nhập
 
 // Search :
