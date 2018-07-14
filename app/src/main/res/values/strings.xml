@@ -36,6 +36,10 @@
     <string name="facebook_app_id">2202554339760716</string>
     <string name="fb_login_protocol_scheme">fb2202554339760716</string>
     <string name="txt_name_email">Email</string>
+    <string name="title_vol_24h">Vol\n(24h)</string>
+    <string name="title_per_1h">Per\n(1h)</string>
+    <string name="title_per_24h">Per\n(24h)</string>
+    <string name="title_per_7d">Per\n(7d)</string>
     <string-array name="value_currency">
         <item>AUD</item>
         <item>BRL</item>
