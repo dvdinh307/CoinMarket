@@ -33,6 +33,9 @@
     <string name="msg_error_email">Input your email.</string>
     <string name="msg_email_not_validate">Email not validate.</string>
     <string name="txt_logout">Logout</string>
+    <string name="facebook_app_id">2202554339760716</string>
+    <string name="fb_login_protocol_scheme">fb2202554339760716</string>
+    <string name="txt_name_email">Email</string>
     <string-array name="value_currency">
         <item>AUD</item>
         <item>BRL</item>
