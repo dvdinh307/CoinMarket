@@ -45,30 +45,13 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title_name" />
 
     <TextView
-        android:id="@+id/tv_title_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/value_10dp"
-        android:text="@string/txt_name_email"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/edt_name" />
-
-    <EditText
-        android:id="@+id/edt_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Input your email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/tv_title_email" />
-
-    <TextView
         android:id="@+id/tv_title_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/value_10dp"
         android:text="@string/txt_password"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+        app:layout_constraintTop_toBottomOf="@id/edt_name" />
 
     <EditText
         android:id="@+id/edt_password"

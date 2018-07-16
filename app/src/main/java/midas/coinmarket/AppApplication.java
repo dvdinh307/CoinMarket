@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -23,11 +24,23 @@ public class AppApplication extends Application {
     public static final int TIMEOUT_DEFAULT = 30000;
     private RequestQueue mRequestQueue;
     private static AppApplication sInstance;
+    private static FirebaseDatabase mOnlineDataBase;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        if (mOnlineDataBase == null)
+            mOnlineDataBase = FirebaseDatabase.getInstance();
+    }
+
+    /**
+     * GEt DB Online.
+     *
+     * @return
+     */
+    public static synchronized FirebaseDatabase getFireBaseDb() {
+        return mOnlineDataBase;
     }
 
     public static synchronized AppApplication getInstance() {

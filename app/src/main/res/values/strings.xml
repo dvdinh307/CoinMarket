@@ -40,6 +40,11 @@
     <string name="title_per_1h">Per\n(1h)</string>
     <string name="title_per_24h">Per\n(24h)</string>
     <string name="title_per_7d">Per\n(7d)</string>
+    <string name="name_online_db">online_db_coin</string>
+    <string name="msg_error_password">Input your password</string>
+    <string name="txt_password">Password</string>
+    <string name="user_name_validate">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_</string>
+    <string name="btn_login">Login with account</string>
     <string-array name="value_currency">
         <item>AUD</item>
         <item>BRL</item>

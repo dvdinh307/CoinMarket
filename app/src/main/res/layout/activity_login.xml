@@ -63,13 +63,54 @@
             android:textSize="@dimen/text_size_14sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value_52dp"
+        android:layout_marginBottom="@dimen/value_30dp"
+        android:layout_marginEnd="@dimen/value_20dp"
+        android:layout_marginStart="@dimen/value_20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_google"
+        app:layout_constraintTop_toBottomOf="@id/btn_google">
+
+        <ImageView
+            android:id="@+id/imv_login"
+            android:layout_width="@dimen/value_47dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_login" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/value_10dp"
+            android:layout_toEndOf="@id/imv_login"
+            android:text="@string/btn_login"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_14sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/value_10dp"
+        android:gravity="center"
+        android:text="Please register with Facebook or Google first. After this, you can using Login with account."
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@id/btn_facebook"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ImageView
         android:id="@+id/imv_logi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/value_20dp"
         android:src="@mipmap/ic_logo"
-        app:layout_constraintBottom_toTopOf="@id/btn_facebook"
+        app:layout_constraintBottom_toTopOf="@id/tv_note"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

@@ -14,6 +14,10 @@ public class AppConstants {
         public static String USER = "USER";
     }
 
+    public static class DB_VALUES {
+        public static String TBL_USERS = "TBL_USERS";
+    }
+
     public static class SORT {
         public static String ID = "id";
         public static String RANK = "rank";

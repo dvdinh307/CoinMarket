@@ -39,6 +39,7 @@ public class SplashActivity extends BaseActivity {
                 finish();
             }
         }, 2000);
+
     }
 
     public void printHashKey(Context pContext) {

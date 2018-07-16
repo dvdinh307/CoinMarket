@@ -20,15 +20,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.OnClick;
+import midas.coinmarket.AppApplication;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.activity.ConfirmLoginActivity;
+import midas.coinmarket.controller.activity.SignInActivity;
+import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.UserObject;
+import midas.coinmarket.utils.AccountUtils;
 import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.BaseActivity;
 
@@ -36,6 +45,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 123;
     private CallbackManager callbackManager;
+    private DatabaseReference mDatabase;
+    private UserObject mUser = null;
 
     @Override
     public int getLayoutId() {
@@ -44,6 +55,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     @Override
     public void initFunction() {
+        mDatabase = AppApplication.getFireBaseDb().getReference();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
                 .DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -83,7 +95,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     UserObject userObject = new UserObject();
                     userObject.setId(object.optString("id"));
                     userObject.setEmail(email);
-                    startActivity(new Intent(LoginActivity.this, ConfirmLoginActivity.class).putExtra(AppConstants.INTENT.USER, userObject));
+                    checkExistUserInfomation(userObject);
                 } else {
                     Toast.makeText(LoginActivity.this, "Cannot reigster with facebook", Toast.LENGTH_SHORT).show();
                 }
@@ -95,7 +107,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         req.executeAsync();
     }
 
-    @OnClick({R.id.btn_facebook, R.id.btn_google})
+    @OnClick({R.id.btn_facebook, R.id.btn_google, R.id.btn_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_facebook:
@@ -104,6 +116,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 break;
             case R.id.btn_google:
                 signIn();
+                break;
+            case R.id.btn_login:
+                startActivity(new Intent(LoginActivity.this, SignInActivity.class));
                 break;
         }
     }
@@ -129,7 +144,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         UserObject userObject = new UserObject();
                         userObject.setEmail(email);
                         userObject.setId(id);
-                        startActivity(new Intent(LoginActivity.this, ConfirmLoginActivity.class).putExtra(AppConstants.INTENT.USER, userObject));
+                        checkExistUserInfomation(userObject);
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Cannot register now.", Toast.LENGTH_SHORT).show();
@@ -144,5 +159,38 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void checkExistUserInfomation(final UserObject user) {
+        LoadingDialog.getDialog(LoginActivity.this).show();
+        mDatabase.child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<UserObject> listUser = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    listUser.add(snapshot.getValue(UserObject.class));
+                }
+                for (UserObject object : listUser) {
+                    if (object.getId().equals(user.getId())) {
+                        mUser = object;
+                    }
+                }
+                if (null != mUser) {
+                    AccountUtils.saveAccountInformation(LoginActivity.this, mUser.getEmail(), mUser.getName());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    finish();
+                } else {
+                    startActivity(new Intent(LoginActivity.this, ConfirmLoginActivity.class).putExtra(AppConstants.INTENT.USER, user));
+                }
+                LoadingDialog.getDialog(LoginActivity.this).dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                LoadingDialog.getDialog(LoginActivity.this).dismiss();
+                Toast.makeText(LoginActivity.this, "Cannot insert now", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

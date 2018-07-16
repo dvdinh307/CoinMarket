@@ -7,6 +7,7 @@ public class UserObject implements Parcelable {
     private String id;
     private String email;
     private String name;
+    private String password;
 
     public UserObject() {
     }
@@ -15,6 +16,7 @@ public class UserObject implements Parcelable {
         id = in.readString();
         email = in.readString();
         name = in.readString();
+        password = in.readString();
     }
 
     public static final Creator<UserObject> CREATOR = new Creator<UserObject>() {
@@ -53,6 +55,14 @@ public class UserObject implements Parcelable {
         this.name = name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -63,5 +73,6 @@ public class UserObject implements Parcelable {
         dest.writeString(id);
         dest.writeString(email);
         dest.writeString(name);
+        dest.writeString(password);
     }
 }
