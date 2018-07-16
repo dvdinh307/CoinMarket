@@ -70,7 +70,9 @@ public class BookmarkActivity extends BaseActivity {
 
             @Override
             public void onPinToTop(CoinObject coin, int position) {
-                if (mHelper.pinToTop(String.valueOf(coin.getId()))) {
+                String time = new Date().toString();
+                if (mHelper.pinToTop(String.valueOf(coin.getId()), time)) {
+                    getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId() + "/" + coin.getId()).child("time").setValue(time);
                     CoinObject coinTop = mListCoin.get(position);
                     mListCoin.remove(position);
                     mListCoin.add(0, coinTop);
@@ -105,7 +107,7 @@ public class BookmarkActivity extends BaseActivity {
                         String data = object.getContent();
                         try {
                             CoinObject coin = CoinObject.parserData(new JSONObject(data), "");
-                            mHelper.insertBookMark(coin, data, new Date().toString());
+                            mHelper.insertBookMark(coin, data, object.getTime());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

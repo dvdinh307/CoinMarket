@@ -174,9 +174,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param id
      */
-    public boolean pinToTop(String id) {
+    public boolean pinToTop(String id , String time) {
         ContentValues content = new ContentValues();
-        content.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
+        content.put(AppConstants.COLUMNS.TIME.toString(), time);
         SQLiteDatabase db = this.getWritableDatabase();
         return db.update(TBL_BOOKMARK, content, AppConstants.COLUMNS.ID_BOOKMARK + " = " + id, null) > 0;
     }
