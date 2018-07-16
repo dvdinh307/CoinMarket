@@ -109,7 +109,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // CREATE FUNCTION FOR BOOKMARK.
-    public void insertBookMark(CoinObject coin, String title) {
+    public long insertBookMark(CoinObject coin, String title, String time) {
+        long result = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         // Check exist.
         String sql = "SELECT * FROM " + TBL_BOOKMARK + " WHERE " + AppConstants.COLUMNS.ID_BOOKMARK.toString() + "=" + String.valueOf(coin.getId());
@@ -118,11 +119,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(AppConstants.COLUMNS.ID_BOOKMARK.toString(), coin.getId());
             values.put(AppConstants.COLUMNS.CONTENT_BOOK_MARK.toString(), title);
-            values.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
-            db.insert(TBL_BOOKMARK, null, values);
+            values.put(AppConstants.COLUMNS.TIME.toString(), time);
+            result = db.insert(TBL_BOOKMARK, null, values);
         }
         cursor.close();
         db.close();
+        return result;
     }
 
     /**

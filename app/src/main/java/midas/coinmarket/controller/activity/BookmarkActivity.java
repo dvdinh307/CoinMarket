@@ -1,21 +1,31 @@
 package midas.coinmarket.controller.activity;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
+import midas.coinmarket.controller.dialog.LoadingDialog;
+import midas.coinmarket.model.BookMarkOnlineObject;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.DatabaseHelper;
+import midas.coinmarket.utils.AppConstants;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.view.adapter.BookmarkAdapter;
-import midas.coinmarket.view.adapter.MainAdapter;
 
 public class BookmarkActivity extends BaseActivity {
     @BindView(R.id.rcy_book)
@@ -72,6 +82,48 @@ public class BookmarkActivity extends BaseActivity {
         });
         mRcyBook.setAdapter(mAdapter);
         mTvNoData.setVisibility(mListCoin.size() > 0 ? View.GONE : View.VISIBLE);
+        getListDataOnline();
+    }
+
+    private void getListDataOnline() {
+        LoadingDialog.getDialog(BookmarkActivity.this).show();
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    BookMarkOnlineObject object = snapshot.getValue(BookMarkOnlineObject.class);
+                    if (null != object) {
+                        String data = object.getContent();
+                        try {
+                            CoinObject coin = CoinObject.parserData(new JSONObject(data), "");
+                            addCoinToList(coin);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                mTvNoData.setVisibility(mListCoin.size() > 0 ? View.GONE : View.VISIBLE);
+                LoadingDialog.getDialog(BookmarkActivity.this).dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                LoadingDialog.getDialog(BookmarkActivity.this).dismiss();
+            }
+        });
+    }
+
+    public void addCoinToList(CoinObject coin) {
+        boolean canAdd = true;
+        for (CoinObject values : mListCoin) {
+            if (values.getId() == coin.getId()) {
+                canAdd = false;
+                break;
+            }
+        }
+        if (canAdd)
+            mListCoin.add(coin);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick({R.id.imv_back})

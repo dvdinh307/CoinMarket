@@ -1,22 +1,27 @@
 package midas.coinmarket.controller;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.dialog.LoadingDialog;
+import midas.coinmarket.model.BookMarkOnlineObject;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.DatabaseHelper;
 import midas.coinmarket.model.QuoteObject;
@@ -163,8 +168,26 @@ public class SpecificCurrencyActivity extends BaseActivity {
                 break;
             case R.id.imv_favorite:
                 // save to bookmark.
-                if (mContentCoin.length() > 0)
-                    mHelper.insertBookMark(mCoinObject, mContentCoin);
+                if (mContentCoin.length() > 0) {
+                    String time = new Date().toString();
+                    long result = mHelper.insertBookMark(mCoinObject, mContentCoin, time);
+                    if (result > 0) {
+                        BookMarkOnlineObject book = new BookMarkOnlineObject(String.valueOf(mCoinObject.getId()), mContentCoin, time);
+                        // Save to fire base.
+                        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId()).child(String.valueOf(book.getId())).setValue(book).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                    }
+                }
+
                 Toast.makeText(SpecificCurrencyActivity.this, "Save success", Toast.LENGTH_SHORT).show();
                 break;
         }
