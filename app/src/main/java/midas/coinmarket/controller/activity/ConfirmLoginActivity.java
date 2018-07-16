@@ -13,14 +13,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import midas.coinmarket.AppApplication;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.MainActivity;
 import midas.coinmarket.controller.dialog.LoadingDialog;
@@ -37,7 +35,6 @@ public class ConfirmLoginActivity extends BaseActivity {
     @BindView(R.id.edt_password)
     EditText mEdtPassword;
     private UserObject mUser;
-    private DatabaseReference mDatabase;
 
     @Override
     public int getLayoutId() {
@@ -46,7 +43,6 @@ public class ConfirmLoginActivity extends BaseActivity {
 
     @Override
     public void initFunction() {
-        mDatabase = AppApplication.getFireBaseDb().getReference();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mUser = bundle.getParcelable(AppConstants.INTENT.USER);
@@ -82,7 +78,7 @@ public class ConfirmLoginActivity extends BaseActivity {
 
     public void checkCanInsertDb(final UserObject user) {
         LoadingDialog.getDialog(ConfirmLoginActivity.this).show();
-        mDatabase.child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<UserObject> listUser = new ArrayList<>();
@@ -114,11 +110,12 @@ public class ConfirmLoginActivity extends BaseActivity {
     public void insertUserInfomation() {
         // Save User to DB Online.
         // Using user name / password to login.
-        mDatabase.child(AppConstants.DB_VALUES.TBL_USERS).child(mUser.getName()).setValue(mUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_USERS).child(mUser.getName()).setValue(mUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ConfirmLoginActivity.this, "Register Success", Toast.LENGTH_SHORT).show();
-                AccountUtils.saveAccountInformation(ConfirmLoginActivity.this, mUser.getEmail(), mUser.getName());
+                AccountUtils.saveAccountInformation(ConfirmLoginActivity.this, mUser.getName(), mUser.getPassword());
+                AccountUtils.setUser(mUser);
                 startActivity(new Intent(ConfirmLoginActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();
             }

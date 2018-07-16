@@ -58,14 +58,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertHistory(CryptocurrencyObject object) {
+    public CryptocurrencyObject insertHistory(CryptocurrencyObject object) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(AppConstants.COLUMNS.ID_COIN.toString(), String.valueOf(object.getId()));
         values.put(AppConstants.COLUMNS.TITLE.toString(), object.getName());
-        values.put(AppConstants.COLUMNS.TIME.toString(), new Date().toString());
+        String dateInsert = new Date().toString();
+        values.put(AppConstants.COLUMNS.TIME.toString(), dateInsert);
         db.insert(TBL_HISOTRY, null, values);
         db.close();
+        object.setTime(dateInsert);
+        return object;
     }
 
     /**

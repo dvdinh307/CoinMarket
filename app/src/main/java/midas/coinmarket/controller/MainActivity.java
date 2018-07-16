@@ -2,6 +2,7 @@ package midas.coinmarket.controller;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -17,6 +18,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.paginate.Paginate;
 
 import org.json.JSONArray;
@@ -104,9 +107,19 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
         mLvSuggest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CryptocurrencyObject cryobject = mListSuggest.get(position);
-                mHelper.insertHistory(cryobject);
-                startActivity(new Intent(MainActivity.this, SpecificCurrencyActivity.class).putExtra(AppConstants.INTENT.DATA, String.valueOf(cryobject.getId())));
+                CryptocurrencyObject syncObject = mHelper.insertHistory(mListSuggest.get(position));
+                getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_HISTORY + "/" + getUser().getId()).child(String.valueOf(syncObject.getId())).setValue(syncObject).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+//                startActivity(new Intent(MainActivity.this, SpecificCurrencyActivity.class).putExtra(AppConstants.INTENT.DATA, String.valueOf(cryobject.getId())));
             }
         });
         // End

@@ -99,4 +99,16 @@ public class CryptocurrencyObject implements Parcelable {
         result.setWebsiteSlug(object.optString(AppConstants.KEY_PARAMS.WEBSITE_SLUG.toString()));
         return result;
     }
+
+    /**
+     * Compare two object.
+     *
+     * @param object1
+     * @param object2
+     * @return
+     */
+    public static boolean compareObject(CryptocurrencyObject object1, CryptocurrencyObject object2) {
+        return object1.getId() == object2.getId() && object1.getName().equals(object2.getName())
+                && object1.getTime().equals(object2.getTime());
+    }
 }

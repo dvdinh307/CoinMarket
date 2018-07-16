@@ -22,7 +22,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.OnClick;
-import midas.coinmarket.AppApplication;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.activity.ConfirmLoginActivity;
 import midas.coinmarket.controller.activity.SignInActivity;
@@ -45,7 +43,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 123;
     private CallbackManager callbackManager;
-    private DatabaseReference mDatabase;
     private UserObject mUser = null;
 
     @Override
@@ -55,7 +52,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     @Override
     public void initFunction() {
-        mDatabase = AppApplication.getFireBaseDb().getReference();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
                 .DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -163,7 +159,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     private void checkExistUserInfomation(final UserObject user) {
         LoadingDialog.getDialog(LoginActivity.this).show();
-        mDatabase.child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<UserObject> listUser = new ArrayList<>();
@@ -176,7 +172,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     }
                 }
                 if (null != mUser) {
-                    AccountUtils.saveAccountInformation(LoginActivity.this, mUser.getEmail(), mUser.getName());
+                    AccountUtils.saveAccountInformation(LoginActivity.this, mUser.getName(), mUser.getPassword());
+                    AccountUtils.setUser(mUser);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     finish();
                 } else {

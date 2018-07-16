@@ -9,14 +9,12 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import midas.coinmarket.AppApplication;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.MainActivity;
 import midas.coinmarket.controller.dialog.LoadingDialog;
@@ -30,7 +28,6 @@ public class SignInActivity extends BaseActivity {
     EditText mEdtName;
     @BindView(R.id.edt_password)
     EditText mEdtPassword;
-    private DatabaseReference mDatabase;
     private UserObject mUser;
 
     @Override
@@ -40,7 +37,6 @@ public class SignInActivity extends BaseActivity {
 
     @Override
     public void initFunction() {
-        mDatabase = AppApplication.getFireBaseDb().getReference();
 
     }
 
@@ -62,7 +58,7 @@ public class SignInActivity extends BaseActivity {
 
     public void checkCanInsertDb(final String name, final String password) {
         LoadingDialog.getDialog(SignInActivity.this).show();
-        mDatabase.child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_USERS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<UserObject> listUser = new ArrayList<>();
@@ -74,7 +70,8 @@ public class SignInActivity extends BaseActivity {
                         mUser = object;
                 }
                 if (null != mUser) {
-                    AccountUtils.saveAccountInformation(SignInActivity.this, mUser.getEmail(), mUser.getName());
+                    AccountUtils.saveAccountInformation(SignInActivity.this, mUser.getName(), mUser.getPassword());
+                    AccountUtils.setUser(mUser);
                     startActivity(new Intent(SignInActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     finish();
                 } else {

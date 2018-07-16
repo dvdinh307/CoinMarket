@@ -16,6 +16,7 @@ public class AppConstants {
 
     public static class DB_VALUES {
         public static String TBL_USERS = "TBL_USERS";
+        public static String TBL_HISTORY = "TBL_HISTORY";
     }
 
     public static class SORT {

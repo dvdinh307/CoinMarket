@@ -9,8 +9,20 @@ import android.content.Intent;
 import android.util.Log;
 
 import midas.coinmarket.R;
+import midas.coinmarket.model.UserObject;
 
 public class AccountUtils {
+    public static UserObject mUser;
+
+    public static void setUser(UserObject user) {
+        mUser = user;
+    }
+
+    public static UserObject getUser() {
+        if (null != mUser)
+            return mUser;
+        else return new UserObject();
+    }
 
     public static Account getAccountUser(Activity activity, AccountManager manager) {
         Account[] accounts = manager.getAccounts();
@@ -26,16 +38,16 @@ public class AccountUtils {
         return accountResult;
     }
 
-    public static void saveAccountInformation(Activity activity, String email, String password) {
+    public static void saveAccountInformation(Activity activity, String name, String password) {
         AccountManager mManagerAccount = AccountManager.get(activity);
         String accountType = activity.getString(R.string.account_type);
         // This is the magic that addes the account to the Android Account Manager
-        final Account account = new Account(email, accountType);
+        final Account account = new Account(name, accountType);
         mManagerAccount.addAccountExplicitly(account, password, null);
         // Now we tell our caller, could be the Android Account Manager or even our own application
         // that the process was successful
         final Intent intent = new Intent();
-        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, name);
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
         intent.putExtra(AccountManager.KEY_AUTHTOKEN, accountType);
         activity.setResult(Activity.RESULT_OK, intent);

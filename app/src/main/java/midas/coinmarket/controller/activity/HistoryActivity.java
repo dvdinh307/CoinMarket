@@ -2,6 +2,7 @@ package midas.coinmarket.controller.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,12 +10,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import midas.coinmarket.R;
 import midas.coinmarket.controller.SpecificCurrencyActivity;
+import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CryptocurrencyObject;
 import midas.coinmarket.model.DatabaseHelper;
 import midas.coinmarket.utils.AppConstants;
@@ -50,7 +56,42 @@ public class HistoryActivity extends BaseActivity {
             }
         });
         mTvNoData.setVisibility(mList.size() > 0 ? View.GONE : View.VISIBLE);
+        getOnlineData();
     }
+
+    private void getOnlineData() {
+        LoadingDialog.getDialog(HistoryActivity.this).show();
+        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_HISTORY + "/" + getUser().getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    CryptocurrencyObject object = snapshot.getValue(CryptocurrencyObject.class);
+                    addDataToList(object);
+                }
+                mAdapter.notifyDataSetChanged();
+                mTvNoData.setVisibility(mList.size() > 0 ? View.GONE : View.VISIBLE);
+                LoadingDialog.getDialog(HistoryActivity.this).dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                LoadingDialog.getDialog(HistoryActivity.this).dismiss();
+            }
+        });
+    }
+
+    private void addDataToList(CryptocurrencyObject object) {
+        boolean isCanAdd = true;
+        for (int i = 0; i < mList.size(); i++) {
+            if (CryptocurrencyObject.compareObject(mList.get(i), object)) {
+                isCanAdd = false;
+                break;
+            }
+        }
+        if (isCanAdd)
+            mList.add(object);
+    }
+
 
     @OnClick({R.id.imv_back, R.id.imv_clear})
     public void OnClick(View view) {
