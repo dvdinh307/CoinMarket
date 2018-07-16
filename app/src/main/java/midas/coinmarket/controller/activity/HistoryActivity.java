@@ -106,7 +106,10 @@ public class HistoryActivity extends BaseActivity {
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                // Clear client.
                                 mHelper.clearHistory();
+                                // Clear firebase data base.
+                                getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_HISTORY + "/" + getUser().getId()).removeValue();
                                 Toast.makeText(HistoryActivity.this, "Clear success !", Toast.LENGTH_SHORT).show();
                                 mList.clear();
                                 mAdapter.notifyDataSetChanged();

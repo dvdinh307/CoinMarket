@@ -1,15 +1,12 @@
 package midas.coinmarket.controller;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,17 +171,7 @@ public class SpecificCurrencyActivity extends BaseActivity {
                     if (result > 0) {
                         BookMarkOnlineObject book = new BookMarkOnlineObject(String.valueOf(mCoinObject.getId()), mContentCoin, time);
                         // Save to fire base.
-                        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId()).child(String.valueOf(book.getId())).setValue(book).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                            }
-                        });
+                        getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId()).child(String.valueOf(book.getId())).setValue(book);
                     }
                 }
 

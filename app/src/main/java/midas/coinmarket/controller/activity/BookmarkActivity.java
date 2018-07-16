@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +46,6 @@ public class BookmarkActivity extends BaseActivity {
     @Override
     public void initFunction() {
         mHelper = new DatabaseHelper(BookmarkActivity.this);
-        mListCoin = mHelper.getAllBookmark();
         mRcyBook.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new BookmarkAdapter(mListCoin, false, false);
         mAdapter.setListner(new BookmarkAdapter.onActionBookmark() {
@@ -58,6 +58,7 @@ public class BookmarkActivity extends BaseActivity {
             public void onDelete(CoinObject coin, int position) {
                 boolean remove = mHelper.removeItemBookmark(String.valueOf(coin.getId()));
                 if (remove) {
+                    getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId() + "/" + coin.getId()).removeValue();
                     mListCoin.remove(position);
                     mAdapter.notifyDataSetChanged();
                     Toast.makeText(BookmarkActivity.this, "Delete success !", Toast.LENGTH_SHORT).show();
@@ -85,25 +86,32 @@ public class BookmarkActivity extends BaseActivity {
         getListDataOnline();
     }
 
+    private void getListDataOffline() {
+        mListCoin.addAll(mHelper.getAllBookmark());
+        mAdapter.notifyDataSetChanged();
+        mTvNoData.setVisibility(mListCoin.size() > 0 ? View.GONE : View.VISIBLE);
+        LoadingDialog.getDialog(BookmarkActivity.this).dismiss();
+    }
+
     private void getListDataOnline() {
         LoadingDialog.getDialog(BookmarkActivity.this).show();
         getmDatabaseOnline().child(AppConstants.DB_VALUES.TBL_BOOK_MARK + "/" + getUser().getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mListCoin.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     BookMarkOnlineObject object = snapshot.getValue(BookMarkOnlineObject.class);
                     if (null != object) {
                         String data = object.getContent();
                         try {
                             CoinObject coin = CoinObject.parserData(new JSONObject(data), "");
-                            addCoinToList(coin);
+                            mHelper.insertBookMark(coin, data, new Date().toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 }
-                mTvNoData.setVisibility(mListCoin.size() > 0 ? View.GONE : View.VISIBLE);
-                LoadingDialog.getDialog(BookmarkActivity.this).dismiss();
+                getListDataOffline();
             }
 
             @Override
@@ -111,19 +119,6 @@ public class BookmarkActivity extends BaseActivity {
                 LoadingDialog.getDialog(BookmarkActivity.this).dismiss();
             }
         });
-    }
-
-    public void addCoinToList(CoinObject coin) {
-        boolean canAdd = true;
-        for (CoinObject values : mListCoin) {
-            if (values.getId() == coin.getId()) {
-                canAdd = false;
-                break;
-            }
-        }
-        if (canAdd)
-            mListCoin.add(coin);
-        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick({R.id.imv_back})
