@@ -6,24 +6,24 @@ import com.google.gson.annotations.SerializedName;
 public class USDObject {
     @SerializedName("total_market_cap")
     @Expose
-    private String total_market_cap;
+    private String totalMarketCap;
     @SerializedName("total_volume_24h")
     @Expose
-    private String total_volume_24h;
+    private String totalVolume24h;
 
-    public String getTotal_market_cap() {
-        return total_market_cap;
+    public String getTotalMarketCap() {
+        return totalMarketCap;
     }
 
-    public void setTotal_market_cap(String total_market_cap) {
-        this.total_market_cap = total_market_cap;
+    public void setTotalMarketCap(String totalMarketCap) {
+        this.totalMarketCap = totalMarketCap;
     }
 
-    public String getTotal_volume_24h() {
-        return total_volume_24h;
+    public String getTotalVolume24h() {
+        return totalVolume24h;
     }
 
-    public void setTotal_volume_24h(String total_volume_24h) {
-        this.total_volume_24h = total_volume_24h;
+    public void setTotalVolume24h(String totalVolume24h) {
+        this.totalVolume24h = totalVolume24h;
     }
 }

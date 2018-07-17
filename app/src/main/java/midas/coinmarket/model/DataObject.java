@@ -16,6 +16,9 @@ public class DataObject {
     @SerializedName("last_updated")
     @Expose
     private String last_updated;
+    @SerializedName("quotes")
+    @Expose
+    private Quotes quotes;
 
     public String getActive_cryptocurrencies() {
         return active_cryptocurrencies;
@@ -47,5 +50,14 @@ public class DataObject {
 
     public void setLast_updated(String last_updated) {
         this.last_updated = last_updated;
+    }
+
+
+    public Quotes getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(Quotes quotes) {
+        this.quotes = quotes;
     }
 }

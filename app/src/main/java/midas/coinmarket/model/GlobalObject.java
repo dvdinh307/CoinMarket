@@ -7,9 +7,6 @@ public class GlobalObject {
     @SerializedName("data")
     @Expose
     private DataObject data;
-    @SerializedName("USD")
-    @Expose
-    private USDObject usd;
 
     public DataObject getData() {
         return data;
@@ -17,13 +14,5 @@ public class GlobalObject {
 
     public void setData(DataObject data) {
         this.data = data;
-    }
-
-    public USDObject getUsd() {
-        return usd;
-    }
-
-    public void setUsd(USDObject usd) {
-        this.usd = usd;
     }
 }
