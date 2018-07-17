@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +44,10 @@ import midas.coinmarket.controller.dialog.CurrencyDialog;
 import midas.coinmarket.controller.dialog.LoadingDialog;
 import midas.coinmarket.model.CoinObject;
 import midas.coinmarket.model.CryptocurrencyObject;
+import midas.coinmarket.model.CurrencyObject;
 import midas.coinmarket.model.DatabaseHelper;
+import midas.coinmarket.model.GlobalObject;
+import midas.coinmarket.model.ResultParserObject;
 import midas.coinmarket.utils.AccountUtils;
 import midas.coinmarket.utils.AlarmManagerUtils;
 import midas.coinmarket.utils.AppConstants;
@@ -51,9 +55,13 @@ import midas.coinmarket.utils.AppPreference;
 import midas.coinmarket.utils.BaseActivity;
 import midas.coinmarket.utils.RecyclerItemClickListener;
 import midas.coinmarket.utils.RequestDataUtils;
+import midas.coinmarket.utils.RequestUtils;
 import midas.coinmarket.view.CustomLoadingListItemCreator;
 import midas.coinmarket.view.adapter.CryptocurrentcyAdapter;
 import midas.coinmarket.view.adapter.MainAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements Paginate.Callbacks, SearchView.OnQueryTextListener {
     private final int NUMBER_ITEM = 10;
@@ -147,6 +155,43 @@ public class MainActivity extends BaseActivity implements Paginate.Callbacks, Se
         }));
         getListSuggest();
         createAlarm();
+//        createRetrofitGet();
+        getListGlobal();
+    }
+
+    private void getListGlobal() {
+        RequestUtils.getBaseService().dataGlobal().enqueue(new Callback<GlobalObject>() {
+            @Override
+            public void onResponse(Call<GlobalObject> call, Response<GlobalObject> response) {
+                Log.e("MainActivity", "posts loaded from API" + response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<GlobalObject> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createRetrofitGet() {
+        RequestUtils.getBaseService().listCurrency().enqueue(new Callback<ResultParserObject>() {
+            @Override
+            public void onResponse(Call<ResultParserObject> call, Response<ResultParserObject> response) {
+                Toast.makeText(MainActivity.this, "Suceess", Toast.LENGTH_SHORT).show();
+                ArrayList<CurrencyObject> mListCurrent = Objects.requireNonNull(response.body()).getData();
+                if (response.isSuccessful()) {
+
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors depending on status code
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultParserObject> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
